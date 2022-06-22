@@ -7,6 +7,8 @@ const val IMAGE_BASE_URL = "https://image.tmdb.org/t/p/original/"
 const val API_KEY = "cf2a0e44ebd0f153e44c7a54007b3f1c"
 
 const val RECYCLER_VIEW_GRID_SPAN_SIZE = 2
+const val API_USER_AGENT = 1
+
 
 //EndPoints Reference.
 object ApiEndPoints {
