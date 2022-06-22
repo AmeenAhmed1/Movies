@@ -13,4 +13,5 @@ const val API_USER_AGENT = 1
 //EndPoints Reference.
 object ApiEndPoints {
     const val TOP_MOVIES_ENDPOINT = "movie/top_rated"
+    const val MOVIE_GENRES_ENDPOINT = "genre/movie/list"
 }

@@ -1,6 +1,7 @@
 package com.ameen.movies.presentation.fragment
 
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,15 +12,22 @@ import androidx.lifecycle.lifecycleScope
 import androidx.paging.LoadState
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ameen.movies.core.util.RECYCLER_VIEW_GRID_SPAN_SIZE
+import com.ameen.movies.core.wrapper.ResultWrapper
 import com.ameen.movies.databinding.FragmentHomeBinding
+import com.ameen.movies.domain.model.MovieGenre
 import com.ameen.movies.presentation.adapter.HomeMovieAdapter
 import com.ameen.movies.presentation.extention.hide
 import com.ameen.movies.presentation.extention.show
+import com.google.android.material.chip.Chip
+import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
+import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
 class HomeFragment : Fragment() {
+
+    private val TAG = "HomeFragment"
 
     private val binding by lazy(LazyThreadSafetyMode.NONE) {
         FragmentHomeBinding.inflate(layoutInflater)
@@ -53,16 +61,20 @@ class HomeFragment : Fragment() {
             }
         }
 
-//        lifecycleScope.launchWhenCreated {
-//            topRatedViewModel.topRatedMoviesList.collect() {
-//                when (it) {
-//                    is ResponseWrapper.Success -> recAdapter.diff.submitList(it.value.results)
-//                    is ResponseWrapper.Fail -> {
-//                        TODO("Handle Error && Failure")
-//                    }
-//                }
-//            }
-//        }
+        lifecycleScope.launchWhenCreated {
+            homeViewModel.movieGenreList.collect {
+                when (it) {
+                    is ResultWrapper.Success -> {
+                        Log.e(TAG, "initObservers: $it")
+                        createChip(it.value, binding.movieGenreChips)
+                    }
+
+                    is ResultWrapper.Error -> {
+                        Log.e(TAG, "initObservers: ${it.error}")
+                    }
+                }
+            }
+        }
     }
 
     private fun initRecyclerView() {
@@ -105,6 +117,27 @@ class HomeFragment : Fragment() {
         } else
             homeViewModel.getTopRatedMovies()
 
+    }
+
+    private fun createChip(data: List<MovieGenre>, chipView: ChipGroup) {
+//        chipView.addView(
+//            Chip(requireContext()).apply {
+//                text = "All"
+//                isCheckable = true
+//                isChecked = true
+//            }
+//        )
+        for (item in data) {
+            val chip = Chip(requireContext())
+            chip.text = item.name
+            chip.isCheckable = true
+            chipView.addView(chip)
+        }
+
+        binding.movieGenreChips.setOnCheckedStateChangeListener { group, checkedIds ->
+            Log.e(TAG, "initObservers: Checked $checkedIds")
+            Log.e(TAG, "createChip: CheckInListId: ${data[checkedIds.first().minus(1)]}")
+        }
     }
 
 }
