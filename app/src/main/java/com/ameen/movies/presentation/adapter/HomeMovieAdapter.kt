@@ -2,7 +2,7 @@ package com.ameen.movies.presentation.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.paging.PagingDataAdapter
+import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.ameen.movies.core.util.IMAGE_BASE_URL
 import com.ameen.movies.data.model.MovieModel
@@ -10,13 +10,15 @@ import com.ameen.movies.databinding.ItemMovieBinding
 import com.ameen.movies.presentation.extention.loadImageFromUrl
 
 class HomeMovieAdapter :
-    PagingDataAdapter<MovieModel, HomeMovieAdapter.MyViewHolder>(HomeMovieDiffUtil) {
+    RecyclerView.Adapter<HomeMovieAdapter.MyViewHolder>() {
 
     inner class MyViewHolder(
         val binding: ItemMovieBinding
     ) : RecyclerView.ViewHolder(binding.root)
 
     private var _binding: ItemMovieBinding? = null
+
+    val diffUtil = AsyncListDiffer(this, HomeMovieDiffUtil)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): MyViewHolder {
         _binding = ItemMovieBinding.inflate(LayoutInflater.from(parent.context), parent, false)
@@ -25,7 +27,7 @@ class HomeMovieAdapter :
 
     override fun onBindViewHolder(holder: MyViewHolder, position: Int) {
 
-        val currentItem = getItem(position)
+        val currentItem = diffUtil.currentList[position]
 
         holder.apply {
             currentItem?.let {
@@ -40,4 +42,6 @@ class HomeMovieAdapter :
     fun onItemClicked(listener: (MovieModel) -> Unit) {
         onItemClickListener = listener
     }
+
+    override fun getItemCount(): Int = diffUtil.currentList.size
 }

@@ -2,7 +2,7 @@ package com.ameen.movies.data.repository
 
 import com.ameen.movies.core.util.API_KEY
 import com.ameen.movies.core.wrapper.ResultWrapper
-import com.ameen.movies.data.mapper.MovieGenreDataMapper
+import com.ameen.movies.data.mapper.DataModelMapper
 import com.ameen.movies.data.remote.MoviesApi
 import com.ameen.movies.domain.model.MovieGenre
 import com.ameen.movies.domain.repository.MoviesGenresRepository
@@ -12,7 +12,7 @@ import javax.inject.Inject
 
 class MoviesGenresRepositoryImp @Inject constructor(
     private val api: MoviesApi,
-    private val movieGenreDataMapper: MovieGenreDataMapper
+    private val movieGenreDataMapper: DataModelMapper
 ) : MoviesGenresRepository {
 
     override fun getMovieGenres(): Flow<ResultWrapper<List<MovieGenre>>> {

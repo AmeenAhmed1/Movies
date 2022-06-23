@@ -2,8 +2,8 @@ package com.ameen.movies.presentation.fragment
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import androidx.paging.cachedIn
 import com.ameen.movies.core.wrapper.ResultWrapper
+import com.ameen.movies.domain.model.MovieData
 import com.ameen.movies.domain.model.MovieGenre
 import com.ameen.movies.domain.usecase.GetMovieGenreUseCase
 import com.ameen.movies.domain.usecase.GetTopRatedMoviesUseCase
@@ -25,12 +25,20 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(ResultWrapper.Loading)
     val movieGenreList = _movieGenreList
 
+
+    private val _movieDataList: MutableStateFlow<ResultWrapper<List<MovieData>>> =
+        MutableStateFlow(ResultWrapper.Loading)
+    val movieDataList = _movieDataList
+
     init {
         getMovieGenre()
     }
 
     fun getTopRatedMovies() =
-        getTopRatedMoviesUseCase.execute().cachedIn(viewModelScope)
+        getTopRatedMoviesUseCase.execute().flowOn(Dispatchers.IO)
+            .onEach {
+                _movieDataList.emit(it)
+            }.launchIn(viewModelScope)
 
     fun getMovieGenre() =
         getMovieGenreUseCase.execute().flowOn(Dispatchers.IO)

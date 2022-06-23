@@ -1,6 +1,6 @@
 package com.ameen.movies.di
 
-import com.ameen.movies.data.mapper.MovieGenreDataMapper
+import com.ameen.movies.data.mapper.DataModelMapper
 import com.ameen.movies.data.remote.MoviesApi
 import com.ameen.movies.data.repository.MoviesGenresRepositoryImp
 import com.ameen.movies.data.repository.TopRatedMovieRepositoryImp
@@ -18,13 +18,13 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun providesTopRatedMovieRepository(api: MoviesApi) =
-        TopRatedMovieRepositoryImp(api) as TopRatedMovieRepository
+    fun providesTopRatedMovieRepository(api: MoviesApi, movieListDataModelMapper: DataModelMapper) =
+        TopRatedMovieRepositoryImp(api, movieListDataModelMapper) as TopRatedMovieRepository
 
 
     @Singleton
     @Provides
-    fun providesMovieGenreRepository(api: MoviesApi, movieGenreDataMapper: MovieGenreDataMapper) =
+    fun providesMovieGenreRepository(api: MoviesApi, movieGenreDataMapper: DataModelMapper) =
         MoviesGenresRepositoryImp(api, movieGenreDataMapper) as MoviesGenresRepository
 
 }

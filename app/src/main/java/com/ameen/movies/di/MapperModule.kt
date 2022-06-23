@@ -1,7 +1,7 @@
 package com.ameen.movies.di
 
 
-import com.ameen.movies.data.mapper.MovieGenreDataMapper
+import com.ameen.movies.data.mapper.DataModelMapper
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +14,6 @@ object MapperModule {
 
     @Provides
     @Singleton
-    fun provideMovieGenreMapper(): MovieGenreDataMapper = MovieGenreDataMapper()
+    fun provideMovieGenreMapper(): DataModelMapper = DataModelMapper()
 
 }
