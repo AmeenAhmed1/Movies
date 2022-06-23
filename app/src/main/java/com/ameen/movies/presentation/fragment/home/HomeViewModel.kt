@@ -1,4 +1,4 @@
-package com.ameen.movies.presentation.fragment
+package com.ameen.movies.presentation.fragment.home
 
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope

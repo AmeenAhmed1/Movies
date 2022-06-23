@@ -1,4 +1,4 @@
-package com.ameen.movies.presentation.fragment
+package com.ameen.movies.presentation.fragment.home
 
 import android.os.Bundle
 import android.util.Log
@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import com.ameen.movies.core.util.RECYCLER_VIEW_GRID_SPAN_SIZE
 import com.ameen.movies.core.wrapper.ResultWrapper
@@ -102,7 +103,8 @@ class HomeFragment : Fragment() {
             homeViewModel.getTopRatedMovies()
 
             recAdapter.onItemClicked {
-                TODO("Selected Item Go To Details.")
+                val action = HomeFragmentDirections.actionHomeFragmentToDetailsFragment(it)
+                findNavController().navigate(action)
             }
 
 //            recAdapter.addLoadStateListener { loadState ->

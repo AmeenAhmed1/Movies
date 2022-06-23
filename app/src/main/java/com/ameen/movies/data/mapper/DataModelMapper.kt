@@ -1,9 +1,11 @@
 package com.ameen.movies.data.mapper
 
 import com.ameen.movies.data.model.MovieGenresResponse
+import com.ameen.movies.data.model.MovieImagesResponse
 import com.ameen.movies.data.model.TopRatedMoviesResponse
 import com.ameen.movies.domain.model.MovieData
 import com.ameen.movies.domain.model.MovieGenre
+import com.ameen.movies.domain.model.MovieImages
 
 class DataModelMapper {
 
@@ -30,6 +32,7 @@ class DataModelMapper {
                     id = movie.id,
                     overview = movie.overview,
                     poster_path = movie.poster_path,
+                    backdrop_path = movie.backdrop_path,
                     release_date = movie.release_date,
                     title = movie.title,
                     vote_average = movie.vote_average
@@ -37,5 +40,14 @@ class DataModelMapper {
             )
         }
         return movieList.toList()
+    }
+
+
+    fun movieImagesResponseToViewState(movieImagesResponse: MovieImagesResponse): MovieImages {
+        val imageLinks = mutableListOf<String>()
+        for (image in movieImagesResponse.backdrops) {
+            imageLinks.add(image.file_path)
+        }
+        return MovieImages(imageLinks)
     }
 }

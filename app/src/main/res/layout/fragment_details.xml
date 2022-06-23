@@ -27,6 +27,7 @@
             app:srcCompat="@drawable/ic_back" />
 
         <TextView
+            android:id="@+id/movie_details_title"
             style="@style/CustomTextView"
             android:layout_width="0dp"
             android:layout_height="wrap_content"
@@ -49,14 +50,19 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/toolbar_container" />
 
-
-    <ImageView
+    <androidx.viewpager.widget.ViewPager
         android:id="@+id/movie_photo"
         android:layout_width="0dp"
-        android:layout_height="300dp"
+        android:layout_height="0dp"
+        android:orientation="horizontal"
+        app:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+        app:layout_constraintDimensionRatio="1.5"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/divider" />
+        app:layout_constraintTop_toBottomOf="@id/divider"
+        tools:itemCount="3"
+        tools:listitem="@layout/item_image" />
 
     <TextView
         android:id="@+id/movie_overview"

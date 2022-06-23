@@ -2,9 +2,11 @@ package com.ameen.movies.data.remote
 
 import com.ameen.movies.core.util.ApiEndPoints
 import com.ameen.movies.data.model.MovieGenresResponse
+import com.ameen.movies.data.model.MovieImagesResponse
 import com.ameen.movies.data.model.TopRatedMoviesResponse
 import retrofit2.Response
 import retrofit2.http.GET
+import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface MoviesApi {
@@ -20,5 +22,11 @@ interface MoviesApi {
     suspend fun getMovieGenres(
         @Query("api_key") apiKey: String
     ): Response<MovieGenresResponse>
+
+    @GET(ApiEndPoints.MOVIE_IMAGES_ENDPOINT)
+    suspend fun getMovieImages(
+        @Path("movie_id") movieId: Int,
+        @Query("api_key") apiKey: String
+    ): Response<MovieImagesResponse>
 
 }

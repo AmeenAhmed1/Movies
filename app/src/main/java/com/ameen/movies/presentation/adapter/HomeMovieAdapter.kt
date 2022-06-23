@@ -5,8 +5,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.RecyclerView
 import com.ameen.movies.core.util.IMAGE_BASE_URL
-import com.ameen.movies.data.model.MovieModel
 import com.ameen.movies.databinding.ItemMovieBinding
+import com.ameen.movies.domain.model.MovieData
 import com.ameen.movies.presentation.extention.loadImageFromUrl
 
 class HomeMovieAdapter :
@@ -35,11 +35,15 @@ class HomeMovieAdapter :
                 binding.movieTitle.text = currentItem.title
                 binding.movieYear.text = currentItem.release_date
             }
+
+            binding.itemMovie.setOnClickListener {
+                onItemClickListener?.let { it(currentItem) }
+            }
         }
     }
 
-    private var onItemClickListener: ((MovieModel) -> Unit)? = null
-    fun onItemClicked(listener: (MovieModel) -> Unit) {
+    private var onItemClickListener: ((MovieData) -> Unit)? = null
+    fun onItemClicked(listener: (MovieData) -> Unit) {
         onItemClickListener = listener
     }
 

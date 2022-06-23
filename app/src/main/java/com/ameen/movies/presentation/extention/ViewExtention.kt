@@ -6,6 +6,7 @@ import android.widget.ImageView
 import android.widget.Toast
 import com.ameen.movies.R
 import com.ameen.movies.core.util.API_USER_AGENT
+import com.ameen.movies.core.util.IMAGE_BASE_URL
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.model.GlideUrl
 import com.bumptech.glide.load.model.LazyHeaders
@@ -25,8 +26,10 @@ fun Context.showToast(text: String) {
 fun ImageView.loadImageFromUrl(url: String) {
     Glide.with(this.context).load(
         GlideUrl(
-            url,
+            IMAGE_BASE_URL + url,
             LazyHeaders.Builder().addHeader("User-Agent", API_USER_AGENT.toString()).build()
         )
-    ).placeholder(R.drawable.ic_launcher_foreground).into(this)
+    ).placeholder(R.drawable.ic_launcher_foreground)
+        .centerCrop()
+        .into(this)
 }
