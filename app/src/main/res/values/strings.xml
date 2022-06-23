@@ -1,4 +1,5 @@
 <resources>
     <string name="app_name">Movies</string>
     <string name="movie_genre_hint">Movie Genre</string>
+    <string name="no_movies_hint">No Movies found with this filter</string>
 </resources>

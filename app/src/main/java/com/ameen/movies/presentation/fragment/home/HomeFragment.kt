@@ -16,6 +16,8 @@ import com.ameen.movies.databinding.FragmentHomeBinding
 import com.ameen.movies.domain.model.MovieData
 import com.ameen.movies.domain.model.MovieGenre
 import com.ameen.movies.presentation.adapter.HomeMovieAdapter
+import com.ameen.movies.presentation.extention.hide
+import com.ameen.movies.presentation.extention.show
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
@@ -146,10 +148,16 @@ class HomeFragment : Fragment() {
         }
 
         binding.movieGenreChips.setOnCheckedStateChangeListener { group, checkedIds ->
-            Log.e(TAG, "initObservers: Checked $checkedIds")
-            Log.e(TAG, "createChip: CheckInListId: ${data[checkedIds.first().minus(1)]}")
-            genreFilterId = data[checkedIds.first().minus(1)].id
-            showMovieList(currentMovieList)
+//            Log.e(TAG, "initObservers: Checked $checkedIds")
+//            Log.e(TAG, "createChip: CheckInListId: ${data[checkedIds.first().minus(1)]}")
+
+            if (checkedIds.isNotEmpty()) {
+                genreFilterId = data[checkedIds.first().minus(1)].id
+                showMovieList(currentMovieList)
+            } else {
+                genreFilterId = 0
+                showMovieList(currentMovieList)
+            }
         }
     }
 
@@ -158,9 +166,19 @@ class HomeFragment : Fragment() {
             val list = data.filter { currentMovie ->
                 currentMovie.genre_ids.contains(genreFilterId)
             }
+            isFiltrationListIsEmpty(list)
             recAdapter.diffUtil.submitList(list)
-        } else
+        } else {
+            isFiltrationListIsEmpty(data)
             recAdapter.diffUtil.submitList(data)
+        }
+    }
+
+    private fun isFiltrationListIsEmpty(data: List<MovieData>) {
+        if (data.isEmpty())
+            binding.noMoviesFilterHintText.show()
+        else
+            binding.noMoviesFilterHintText.hide()
     }
 
 }
