@@ -64,6 +64,15 @@
         tools:itemCount="3"
         tools:listitem="@layout/item_image" />
 
+    <ProgressBar
+        android:id="@+id/loading_progress"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="@id/movie_photo"
+        app:layout_constraintEnd_toEndOf="@id/movie_photo"
+        app:layout_constraintStart_toStartOf="@id/movie_photo"
+        app:layout_constraintTop_toTopOf="@id/movie_photo" />
+
     <TextView
         android:id="@+id/movie_overview"
         android:layout_width="0dp"

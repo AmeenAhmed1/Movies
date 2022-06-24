@@ -30,7 +30,6 @@ class DetailsFragment : Fragment() {
         args.selectedMovieData
     }
 
-    private lateinit var recAdapter: MovieImagesAdapter
     private val detailsFragmentViewModel: DetailsFragmentViewModel by viewModels()
 
     override fun onCreateView(
@@ -61,7 +60,8 @@ class DetailsFragment : Fragment() {
     }
 
     private fun initImageSlider(data: List<String>) {
-        binding.moviePhoto.adapter = MovieImagesAdapter(requireContext(), data)
+        binding.moviePhoto.adapter =
+            MovieImagesAdapter(requireContext(), data, binding.loadingProgress)
     }
 
     private fun getMovieImages() {

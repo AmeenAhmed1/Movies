@@ -31,7 +31,10 @@ class HomeMovieAdapter :
 
         holder.apply {
             currentItem?.let {
-                binding.movieImage.loadImageFromUrl(IMAGE_BASE_URL + currentItem.poster_path)
+                binding.movieImage.loadImageFromUrl(
+                    IMAGE_BASE_URL + currentItem.poster_path,
+                    binding.loadingProgress
+                )
                 binding.movieTitle.text = currentItem.title
                 binding.movieYear.text = currentItem.release_date
             }
