@@ -2,7 +2,7 @@ package com.ameen.movies.data.mapper
 
 import com.ameen.movies.data.model.MovieGenresResponse
 import com.ameen.movies.data.model.MovieImagesResponse
-import com.ameen.movies.data.model.TopRatedMoviesResponse
+import com.ameen.movies.data.model.MoviesResponse
 import com.ameen.movies.domain.model.MovieData
 import com.ameen.movies.domain.model.MovieGenre
 import com.ameen.movies.domain.model.MovieImages
@@ -23,7 +23,7 @@ class DataModelMapper {
     }
 
 
-    fun movieDataResponseToViewState(movieDataList: TopRatedMoviesResponse): List<MovieData> {
+    fun movieDataResponseToViewState(movieDataList: MoviesResponse): List<MovieData> {
         val movieList = mutableListOf<MovieData>()
         for (movie in movieDataList.results) {
             movieList.add(
@@ -31,8 +31,8 @@ class DataModelMapper {
                     genre_ids = movie.genre_ids,
                     id = movie.id,
                     overview = movie.overview,
-                    poster_path = movie.poster_path,
-                    backdrop_path = movie.backdrop_path,
+                    poster_path = movie.poster_path ?: "",
+                    backdrop_path = movie.backdrop_path ?: "",
                     release_date = movie.release_date,
                     title = movie.title,
                     vote_average = movie.vote_average

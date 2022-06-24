@@ -5,6 +5,9 @@ import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.view.inputmethod.EditorInfo
+import android.widget.Toast
+import androidx.core.widget.doOnTextChanged
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
@@ -21,7 +24,6 @@ import com.ameen.movies.presentation.extention.show
 import com.google.android.material.chip.Chip
 import com.google.android.material.chip.ChipGroup
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.flow.collectLatest
 
 @AndroidEntryPoint
@@ -53,7 +55,13 @@ class HomeFragment : Fragment() {
 
         initRecyclerView()
         initObservers()
+        initMovieGenre()
+        handleSearch()
 
+    }
+
+    private fun initMovieGenre() {
+        homeViewModel.getMovieGenre()
     }
 
     private fun initObservers() {
@@ -61,13 +69,18 @@ class HomeFragment : Fragment() {
         lifecycleScope.launchWhenCreated {
             homeViewModel.movieDataList.collectLatest {
                 when (it) {
+
+                    is ResultWrapper.Loading -> showLoading()
+
                     is ResultWrapper.Success -> {
                         Log.e(TAG, "initObservers: $it")
+                        hideLoading()
                         currentMovieList = it.value
                         showMovieList(currentMovieList)
                     }
 
                     is ResultWrapper.Error -> {
+                        hideLoading()
                         Log.e(TAG, "initObservers: ${it.error}")
                     }
                 }
@@ -75,7 +88,7 @@ class HomeFragment : Fragment() {
         }
 
         lifecycleScope.launchWhenCreated {
-            homeViewModel.movieGenreList.collect {
+            homeViewModel.movieGenreList.collectLatest {
                 when (it) {
                     is ResultWrapper.Success -> {
                         Log.e(TAG, "initObservers: $it")
@@ -128,8 +141,7 @@ class HomeFragment : Fragment() {
 //                }
 //            }
 
-        } else
-            homeViewModel.getTopRatedMovies()
+        }
 
     }
 
@@ -144,21 +156,9 @@ class HomeFragment : Fragment() {
                 chip.isChecked = true
 
             chipView.addView(chip)
-
         }
 
-        binding.movieGenreChips.setOnCheckedStateChangeListener { group, checkedIds ->
-//            Log.e(TAG, "initObservers: Checked $checkedIds")
-//            Log.e(TAG, "createChip: CheckInListId: ${data[checkedIds.first().minus(1)]}")
-
-            if (checkedIds.isNotEmpty()) {
-                genreFilterId = data[checkedIds.first().minus(1)].id
-                showMovieList(currentMovieList)
-            } else {
-                genreFilterId = 0
-                showMovieList(currentMovieList)
-            }
-        }
+        handleChipClicks(data)
     }
 
     private fun showMovieList(data: List<MovieData>) {
@@ -181,4 +181,53 @@ class HomeFragment : Fragment() {
             binding.noMoviesFilterHintText.hide()
     }
 
+    private fun handleSearch() {
+
+        binding.searchEditText.doOnTextChanged { text, start, before, count ->
+            if (before == 1) //Means that you clear all the text in search.
+                text?.let {
+                    if (it.isEmpty())
+                        homeViewModel.getTopRatedMovies()
+                }
+        }
+
+        binding.searchEditText.setOnEditorActionListener { textView, actionId, keyEvent ->
+            if (actionId == EditorInfo.IME_ACTION_SEARCH) {
+                Log.e(TAG, "handleSearch: Text: ${textView.text}")
+                homeViewModel.searchMovies(textView.text.toString())
+            }
+            false
+        }
+
+        binding.searchIcon.setOnClickListener {
+            if (binding.searchEditText.text.toString().isEmpty())
+                Toast.makeText(requireContext(), "You have to write text", Toast.LENGTH_SHORT)
+                    .show()
+            else
+                homeViewModel.searchMovies(binding.searchEditText.text.toString())
+        }
+    }
+
+    private fun handleChipClicks(data: MutableList<MovieGenre>) {
+        binding.movieGenreChips.setOnCheckedStateChangeListener { group, checkedIds ->
+//            Log.e(TAG, "initObservers: Checked $checkedIds")
+//            Log.e(TAG, "createChip: CheckInListId: ${data[checkedIds.first().minus(1)]}")
+
+            if (checkedIds.isNotEmpty()) {
+                genreFilterId = data[checkedIds.first().minus(1)].id
+                showMovieList(currentMovieList)
+            } else {
+                genreFilterId = 0
+                showMovieList(currentMovieList)
+            }
+        }
+    }
+
+    private fun showLoading() {
+        binding.loadingProgress.show()
+    }
+
+    private fun hideLoading() {
+        binding.loadingProgress.hide()
+    }
 }

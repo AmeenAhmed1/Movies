@@ -15,4 +15,5 @@ object ApiEndPoints {
     const val TOP_MOVIES_ENDPOINT = "movie/top_rated"
     const val MOVIE_GENRES_ENDPOINT = "genre/movie/list"
     const val MOVIE_IMAGES_ENDPOINT = "movie/{movie_id}/images"
+    const val MOVIE_SEARCH_ENDPOINT = "search/movie"
 }

@@ -7,6 +7,7 @@ import com.ameen.movies.domain.model.MovieData
 import com.ameen.movies.domain.model.MovieGenre
 import com.ameen.movies.domain.usecase.GetMovieGenreUseCase
 import com.ameen.movies.domain.usecase.GetTopRatedMoviesUseCase
+import com.ameen.movies.domain.usecase.SearchMoviesUseCase
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,8 @@ import javax.inject.Inject
 @HiltViewModel
 class HomeViewModel @Inject constructor(
     private val getTopRatedMoviesUseCase: GetTopRatedMoviesUseCase,
-    private val getMovieGenreUseCase: GetMovieGenreUseCase
+    private val getMovieGenreUseCase: GetMovieGenreUseCase,
+    private val searchMoviesUseCase: SearchMoviesUseCase
 ) : ViewModel() {
 
     private val _movieGenreList: MutableStateFlow<ResultWrapper<List<MovieGenre>>> =
@@ -30,9 +32,6 @@ class HomeViewModel @Inject constructor(
         MutableStateFlow(ResultWrapper.Loading)
     val movieDataList = _movieDataList
 
-    init {
-        getMovieGenre()
-    }
 
     fun getTopRatedMovies() =
         getTopRatedMoviesUseCase.execute().flowOn(Dispatchers.IO)
@@ -46,5 +45,11 @@ class HomeViewModel @Inject constructor(
                 _movieGenreList.emit(it)
             }.launchIn(viewModelScope)
 
+
+    fun searchMovies(searchQuery: String) =
+        searchMoviesUseCase.execute(searchQuery).flowOn(Dispatchers.IO)
+            .onEach {
+                _movieDataList.emit(it)
+            }.launchIn(viewModelScope)
 
 }

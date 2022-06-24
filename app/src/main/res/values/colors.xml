@@ -13,4 +13,5 @@
     <color name="colorPrimary">@color/background</color>
     <color name="colorPrimaryDark">@color/background</color>
     <color name="colorAccent">@android:color/white</color>
+    <color name="colorGold">#FFD700</color>
 </resources>
